@@ -1,25 +1,20 @@
 import {Celestial} from './Celestial.js'
+import {G} from '../util.js'
 
-export class CelestialWanderer extends Celestial {
-  angle
-  velocity
-
-  constructor (props) {
-    super(props)
-
-    this.angle = props.angle
-    this.velocity = props.velocity
-  }
+export const CelestialWanderer = {
+  ...Celestial,
+  angle: 0,
+  velocity: 0,
 
   distanceTo (body) {
     return Math.sqrt(
-      ((this.x.value - body.x.value) ** 2) + ((this.y.value - body.y.value) ** 2)
+      ((this.x - body.x) ** 2) + ((this.y - body.y) ** 2)
     )
-  }
+  },
 
   angleTo (body) {
-    return Math.PI + Math.atan2(this.y.value - body.y.value, this.x.value - body.x.value)
-  }
+    return Math.PI + Math.atan2(this.y - body.y, this.x - body.x)
+  },
 
   /**
    *
@@ -28,7 +23,7 @@ export class CelestialWanderer extends Celestial {
    */
   interact (body) {
     let distance = this.distanceTo(body)
-    let velocity = Celestial.G * (this.mass + body.mass) / (distance ** 2)
+    let velocity = G * (this.mass + body.mass) / (distance ** 2)
     let angle = this.angleTo(body)
 
     console.log({distance, velocity, angle})
@@ -36,28 +31,28 @@ export class CelestialWanderer extends Celestial {
     this.updateVector(velocity, angle)
 
     return this.checkCollision(body, distance)
-  }
+  },
 
   move () {
-    this.x.value += this.velocity * Math.cos(this.angle)
-    this.y.value += this.velocity * Math.sin(this.angle)
-  }
+    this.x += this.velocity * Math.cos(this.angle)
+    this.y += this.velocity * Math.sin(this.angle)
+  },
 
   updateVector (vn, an) {
     let xn = this.velocity * Math.cos(this.angle) + vn * Math.cos(an)
     let yn = this.velocity * Math.sin(this.angle) + vn * Math.sin(an)
     this.velocity = Math.sqrt(xn * xn + yn * yn)
     this.angle = Math.atan2(yn, xn)
-  }
+  },
 
   checkCollision (body, distance) {
     return distance < this.radius + body.radius
-  }
+  },
 
-  checkBounds () {
-    return this.x.value < 0 ||
-      this.x.value > Celestial.canvasWidth ||
-      this.y.value < 0 ||
-      this.y.value > Celestial.canvasHeight
-  }
+  checkBounds (canvas) {
+    return this.x < 0 ||
+      this.x > canvas.width ||
+      this.y < 0 ||
+      this.y > canvas.height
+  },
 }
