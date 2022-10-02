@@ -1,10 +1,16 @@
 import {Celestial} from './Celestial.js'
-import {G} from '../util.js'
+import {G, setOpacity} from '../util.js'
 
 export const CelestialWanderer = {
   ...Celestial,
   angle: 0,
   velocity: 0,
+
+  trail: [],
+  maxTrailSteps: 20,
+  minTrailOpacity: 0.4,
+  maxTrailOpacity: 0.98,
+  minTrailWidth: 0.75,
 
   distanceTo (body) {
     return Math.sqrt(
@@ -26,7 +32,7 @@ export const CelestialWanderer = {
     let velocity = G * (this.mass + body.mass) / (distance ** 2)
     let angle = this.angleTo(body)
 
-    console.log({distance, velocity, angle})
+    // console.log({distance, velocity, angle})
 
     this.updateVector(velocity, angle)
 
@@ -34,6 +40,11 @@ export const CelestialWanderer = {
   },
 
   move () {
+    this.trail.push([this.x, this.y])
+    while (this.trail.length > this.maxTrailSteps) {
+      this.trail.shift()
+    }
+
     this.x += this.velocity * Math.cos(this.angle)
     this.y += this.velocity * Math.sin(this.angle)
   },
@@ -50,9 +61,56 @@ export const CelestialWanderer = {
   },
 
   checkBounds (canvas) {
-    return this.x < 0 ||
+    return this.x < 10 ||
       this.x > canvas.width ||
       this.y < 0 ||
       this.y > canvas.height
   },
+
+  /**
+   *
+   * @param {CanvasRenderingContext2D} context
+   * @param bgColor
+   */
+  drawTrail (context, bgColor) {
+    context.beginPath()
+    context.lineWidth = this.radius * 2
+    context.lineCap = 'round'
+    context.lineJoin = 'round'
+    context.strokeStyle = bgColor
+
+    // erase trail
+    context.moveTo(...this.trail[0])
+    for (let [x, y] of this.trail) {
+      context.lineTo(x, y)
+    }
+    context.stroke()
+
+
+    // draw fresh
+    let opacity = (this.maxTrailOpacity - this.minTrailOpacity) / this.maxTrailSteps
+    // console.log({opacity, color: setOpacity(this.color, opacity)})
+    let width = this.minTrailWidth * (this.radius * 2)
+    let widthStep = ((this.radius * 2) - width) / this.maxTrailSteps
+
+    let trail = [...this.trail]
+    while (trail.length > 0) {
+      context.beginPath()
+      let [x, y] = trail[0]
+      context.moveTo(x, y)
+
+      context.lineWidth = width
+      context.lineCap = 'round'
+      context.lineJoin = 'round'
+      context.strokeStyle = setOpacity(this.color, opacity)
+      for (let [x, y] of trail) {
+        context.lineTo(x, y)
+      }
+      context.stroke()
+      trail.shift()
+      width += widthStep
+    }
+
+  },
+
 }

@@ -14,9 +14,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --color-bg: rgb(0 0 0);
-  --color-wanderer: red;
-  --color-celestial: rgb(255 255 255);
+  --color-bg: rgb(0,0,0);
+  --color-wanderer: rgb(255,0,0);
+  --color-celestial: rgb(255,255,255);
 }
 
 a {
@@ -43,6 +43,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  position: relative;
 }
 
 h1 {
@@ -85,8 +86,8 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
 
-    --color-bg: rgb(255 255 255);
-    --color-celestial: rgb(0 0 0);
+    --color-bg: rgb(255,255,255);
+    --color-celestial: rgb(0,0,0);
   }
   a:hover {
     color: #747bff;
