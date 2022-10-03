@@ -61,7 +61,7 @@ export const CelestialWanderer = {
   },
 
   checkBounds (canvas) {
-    return this.x < 10 ||
+    return this.x < 0 ||
       this.x > canvas.width ||
       this.y < 0 ||
       this.y > canvas.height
