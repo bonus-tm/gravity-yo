@@ -77,7 +77,6 @@ export const CelestialWanderer = {
 
     // draw fresh
     let opacity = (this.maxTrailOpacity - this.minTrailOpacity) / this.maxTrailSteps
-    // console.log({opacity, color: setOpacity(this.color, opacity)})
     let width = this.minTrailWidth * (this.radius * 2)
     let widthStep = ((this.radius * 2) - width) / this.maxTrailSteps
 
@@ -118,5 +117,4 @@ export const CelestialWanderer = {
     }
     context.stroke()
   },
-
 }

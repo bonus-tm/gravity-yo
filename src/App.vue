@@ -1,9 +1,10 @@
 <script setup>
-import {computed, reactive, ref} from 'vue'
+import {reactive, ref} from 'vue'
 import {CelestialWanderer} from './classes/CelestialWanderer.js'
 import {Celestial} from './classes/Celestial.js'
 import {round} from './util.js'
 
+let raf
 const canvas = ref(null)
 let context
 
@@ -17,9 +18,8 @@ let colorBg
 let colorCelestial
 let colorWanderer
 
-
 const frame = () => {
-  console.log('framed')
+  // console.log('framed')
   let isCollided = false
   for (let body of celestials) {
     isCollided = isCollided || wanderer.interact(body)
@@ -34,17 +34,19 @@ const frame = () => {
   wanderer.draw(context)
 
   if (!isCollided && !isOutside) {
-    window.requestAnimationFrame(frame)
+    raf = window.requestAnimationFrame(frame)
   }
 }
 
+const run = e => {
+  console.log(e)
+  window.cancelAnimationFrame(raf)
 
-const run = () => {
   let style = getComputedStyle(document.body)
   colorBg = style.getPropertyValue('--color-bg')
   colorCelestial = style.getPropertyValue('--color-celestial')
   colorWanderer = style.getPropertyValue('--color-wanderer')
-  console.log({colorBg, colorCelestial, colorWanderer})
+  // console.log({colorBg, colorCelestial, colorWanderer})
 
   // prep canvas
   context = canvas.value.getContext('2d')
@@ -98,16 +100,15 @@ const run = () => {
 
   // wanderer.drawTrail(context, colorBg)
 
-
   // run frames
-  window.requestAnimationFrame(frame)
+  raf = window.requestAnimationFrame(frame)
 }
 </script>
 
 <template>
   <div style="text-align: left">
-  <div>X: {{ round(wanderers[0]?.x) }}</div>
-  <div>Y: {{ round(wanderers[0]?.y) }}</div>
+    <div>X: {{ round(wanderers[0]?.x) }}</div>
+    <div>Y: {{ round(wanderers[0]?.y) }}</div>
   </div>
 
   <div v-if="wanderers[0]" style="position:absolute;top: 10px;left: 10px;">
