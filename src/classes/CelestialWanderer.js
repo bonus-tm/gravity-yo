@@ -8,9 +8,9 @@ export const CelestialWanderer = {
 
   trail: [],
   maxTrailSteps: 20,
-  minTrailOpacity: 0.4,
-  maxTrailOpacity: 0.98,
-  minTrailWidth: 0.75,
+  minTrailOpacity: 0.1,
+  maxTrailOpacity: 0.5,
+  minTrailWidth: 0.7,
 
   distanceTo (body) {
     return Math.sqrt(
@@ -73,19 +73,7 @@ export const CelestialWanderer = {
    * @param bgColor
    */
   drawTrail (context, bgColor) {
-    context.beginPath()
-    context.lineWidth = this.radius * 2
-    context.lineCap = 'round'
-    context.lineJoin = 'round'
-    context.strokeStyle = bgColor
-
-    // erase trail
-    context.moveTo(...this.trail[0])
-    for (let [x, y] of this.trail) {
-      context.lineTo(x, y)
-    }
-    context.stroke()
-
+    this.eraseTrail(context, bgColor)
 
     // draw fresh
     let opacity = (this.maxTrailOpacity - this.minTrailOpacity) / this.maxTrailSteps
@@ -94,7 +82,9 @@ export const CelestialWanderer = {
     let widthStep = ((this.radius * 2) - width) / this.maxTrailSteps
 
     let trail = [...this.trail]
-    while (trail.length > 0) {
+
+    for (let i = 0; i < this.maxTrailSteps; i++) {
+    // while (trail.length > 0) {
       context.beginPath()
       let [x, y] = trail[0]
       context.moveTo(x, y)
@@ -107,10 +97,26 @@ export const CelestialWanderer = {
         context.lineTo(x, y)
       }
       context.stroke()
-      trail.shift()
       width += widthStep
-    }
 
+      if (i > this.maxTrailSteps - this.trail.length) {
+        trail.shift()
+      }
+    }
+  },
+
+  eraseTrail (context, bgColor) {
+    context.beginPath()
+    context.lineWidth = this.radius * 2
+    context.lineCap = 'round'
+    context.lineJoin = 'round'
+    context.strokeStyle = bgColor
+
+    context.moveTo(...this.trail[0])
+    for (let [x, y] of this.trail) {
+      context.lineTo(x, y)
+    }
+    context.stroke()
   },
 
 }
