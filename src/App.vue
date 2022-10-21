@@ -8,6 +8,7 @@ import {params} from '@/params.js'
 import {canvas, context, backgroundColor} from '@/store'
 import {clearCanvas, lineGradient, testTrail} from '@/classes/draw.js'
 import Settings from '@/components/Settings.vue'
+import Logo from '@/components/Logo.vue'
 
 let raf
 
@@ -157,6 +158,8 @@ const drawLine = (x, y) => {
 </script>
 
 <template>
+  <Logo />
+
   <div>
     <div>
       Time
