@@ -76,6 +76,8 @@ export const wanderer = reactive({
   maxTrailWidth: 0.8,
   minTrailWidth: 0.8,
 
+  collision: false,
+
   reset () {
     this.time = 0
     this.x = 0
@@ -86,7 +88,8 @@ export const wanderer = reactive({
 
     this.distanceTravelled = 0
 
-    this.trail = []
+    this.track = []
+    this.collision = false
   },
 
   init ({x, y, direction, speed}) {
@@ -109,7 +112,12 @@ export const wanderer = reactive({
   updateForce (bodies) {
     this.force.reset()
     for (let body of bodies) {
-      let magnitude = params.G * this.mass * body.mass / this.distanceTo(body) ** 2
+      let distance = this.distanceTo(body)
+      if (distance < this.radius + body.radius) {
+        this.collision = true
+      }
+
+      let magnitude = params.G * this.mass * body.mass / distance ** 2
       let direction = this.angleTo(body)
 
       this.force.add(createVector({direction, magnitude}))
@@ -136,6 +144,7 @@ export const wanderer = reactive({
     this.x += dx
     this.y += dy
     this.time += dt * 1000
+    this.distanceTravelled += Math.sqrt(dx ** 2 + dy ** 2)
   },
 
   pushToTrack () {
@@ -153,10 +162,6 @@ export const wanderer = reactive({
       fDir: this.force.direction,
       fMag: this.force.magnitude,
     })
-  },
-
-  checkCollision (body, distance) {
-    return distance < this.radius + body.radius
   },
 
   checkBounds (canvas) {

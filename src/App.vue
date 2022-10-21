@@ -6,7 +6,7 @@ import {setOpacity} from '@/util/colors.js'
 import {rand, round} from '@/util/numbers.js'
 import {params} from '@/params.js'
 import {canvas, context, backgroundColor} from '@/store'
-import {clearCanvas, lineGradient, testTrail} from '@/classes/draw.js'
+import {clearCanvas, lineGradient} from '@/classes/draw.js'
 import Settings from '@/components/Settings.vue'
 import Logo from '@/components/Logo.vue'
 
@@ -19,6 +19,9 @@ let colorWanderer
 let celestials = []
 
 let time
+
+let velocityMin = ref(Infinity)
+let velocityMax = ref(0)
 
 onMounted(() => {
   let style = getComputedStyle(document.body)
@@ -34,8 +37,6 @@ onMounted(() => {
 
   createCelestials()
   drawCelestials()
-
-  // testTrail()
 })
 
 const createCelestials = () => {
@@ -90,29 +91,20 @@ const frame = ts => {
   wanderer.updateForce(celestials)
   wanderer.calcVelocity(dt)
 
+  if (wanderer.velocity.magnitude > velocityMax.value) {
+    velocityMax.value = wanderer.velocity.magnitude
+  }
+  if (wanderer.velocity.magnitude < velocityMin.value) {
+    velocityMin.value = wanderer.velocity.magnitude
+  }
+
   wanderer.pushToTrack()
 
-  let isCollided = false
-  // for (let body of celestials) {
-  //   isCollided = isCollided || wanderer.interact(body)
-  // }
-
   let isOutside = wanderer.checkBounds(canvas.value)
-  // wanderer.move()
 
-  if (!isCollided && !isOutside) {
+  if (!wanderer.collision && !isOutside) {
     raf = window.requestAnimationFrame(frame)
   }
-}
-
-const run = () => {
-  window.cancelAnimationFrame(raf)
-
-  clearCanvas()
-
-  // create stationary bodies
-  createCelestials()
-  drawCelestials()
 }
 
 let lineDrawing = ref(false)
@@ -135,7 +127,7 @@ const pointEnd = e => {
   let dy = e.offsetY - s.y
   createWanderer(s.x, s.y, dx, dy)
 
-  wanderer.draw(context)
+  wanderer.draw()
   console.log(wanderer)
 
   // run frames
@@ -164,13 +156,18 @@ const drawLine = (x, y) => {
     <div>
       Time
       {{ round(wanderer.time / 1000, 1) }}
-      s
+      s,
+      Distance
+      {{ round(wanderer.distanceTravelled) }}
+      px
     </div>
 
     <div>
       Speed
       {{ round(wanderer.velocity.magnitude, 2) }}
       px/s
+      [min {{ round(velocityMin) }},
+      max {{ round(velocityMax) }}]
     </div>
     <small>force {{ round(wanderer.force.magnitude, 2) }}</small>
   </div>
