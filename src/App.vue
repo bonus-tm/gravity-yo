@@ -4,9 +4,10 @@ import {wanderer} from '@/classes/Wanderer.js'
 import {Celestial} from '@/classes/Celestial.js'
 import {setOpacity} from '@/util/colors.js'
 import {rand, round} from '@/util/numbers.js'
-import {params, restoreParams} from '@/params.js'
+import {params} from '@/params.js'
 import {canvas, context, backgroundColor} from '@/store'
 import {clearCanvas, lineGradient, testTrail} from '@/classes/draw.js'
+import Settings from '@/components/Settings.vue'
 
 let raf
 
@@ -19,8 +20,6 @@ let celestials = []
 let time
 
 onMounted(() => {
-  restoreParams()
-
   let style = getComputedStyle(document.body)
   colorBg = style.getPropertyValue('--color-bg').trim()
   colorCelestial = style.getPropertyValue('--color-celestial').trim()
@@ -92,8 +91,6 @@ const frame = ts => {
 
   wanderer.pushToTrack()
 
-
-
   let isCollided = false
   // for (let body of celestials) {
   //   isCollided = isCollided || wanderer.interact(body)
@@ -160,15 +157,19 @@ const drawLine = (x, y) => {
 </script>
 
 <template>
-  <div style="text-align: left">
-    <div>X: {{ round(wanderer.x) }}</div>
-    <div>Y: {{ round(wanderer.y) }}</div>
+  <div>
+    <div>
+      Time
+      {{ round(wanderer.time / 1000, 1) }}
+      s
+    </div>
 
-    <div>forceDirection: {{ round(wanderer.force.direction, 5) }}</div>
-    <div>forceMagnitude: {{ round(wanderer.force.magnitude, 5) }}</div>
-    <div>forceXY: {{ round(wanderer.force.dx, 5) }},{{ round(wanderer.force.dy, 5) }}</div>
-    <div>velocityDirection: {{ round(wanderer.velocity.direction, 5) }}</div>
-    <div>velocityMagnitude: {{ round(wanderer.velocity.magnitude, 5) }}</div>
+    <div>
+      Speed
+      {{ round(wanderer.velocity.magnitude, 2) }}
+      px/s
+    </div>
+    <small>force {{ round(wanderer.force.magnitude, 2) }}</small>
   </div>
 
   <div v-if="wanderer" style="position:absolute;top: 10px;left: 10px;">
@@ -186,23 +187,7 @@ const drawLine = (x, y) => {
     height="500"
   />
 
-  <h3>Settings</h3>
-  <div>
-    <label for="celestialsCount">Celestials count</label>
-    <input id="celestialsCount" v-model="params.celestialsCount" type="number" min="0" />
-  </div>
-  <div>
-    <input id="stepByStep" v-model="params.stepByStep" type="checkbox" />
-    <label for="stepByStep">Step debug mode</label>
-  </div>
-  <div>
-    <input id="showVectors" v-model="params.showVectors" type="checkbox" />
-    <label for="showVectors">Show velocity and force vectors</label>
-  </div>
-  <div>
-    <input id="bounceFromEdges" v-model="params.bounceFromEdges" type="checkbox" />
-    <label for="bounceFromEdges">Bounce from edges</label>
-  </div>
+  <Settings />
 </template>
 
 <style scoped>
