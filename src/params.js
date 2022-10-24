@@ -10,8 +10,8 @@ const paramDefaults = {
   celestialsCount: 1,
   massMin: 1000,
   massMax: 10_000,
-  radiusMin: 12,
-  radiusMax: 12,
+  radiusMin: 0, // depends on canvas size — 1% of lesser dimension
+  radiusMax: 0, // depends on canvas size — 5% of lesser dimension
   wandererMass: 1,
   wandererRadius: 3,
   trailFadeoutMs: 2000,

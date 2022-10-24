@@ -33,6 +33,10 @@ onMounted(() => {
 
   console.log('mounted', {colorBg, colorCelestial, colorWanderer})
 
+  let minDimension = Math.min(canvas.value.width, canvas.value.height)
+  params.radiusMin = Math.round(minDimension / 100)
+  params.radiusMax = Math.round(minDimension / 20)
+
   context.value = canvas.value.getContext('2d')
 
   createCelestials()
@@ -41,14 +45,13 @@ onMounted(() => {
 
 const createCelestials = () => {
   celestials = []
+  let {width, height} = canvas.value
+  let padding = 0.1
   for (let i = 0; i < params.celestialsCount; i++) {
     let body = Object.assign(Object.create(Celestial), {
-      // x: rand(20, canvas.value.width - 20),
-      // y: rand(20, canvas.value.height - 20),
-      x: 200,
-      y: 200,
-      radius: 12,
-      mass: 30000,
+      x: rand(width * padding, width * (1 - padding)),
+      y: rand(height * padding, height * (1 - padding)),
+      mass: rand(params.massMin, params.massMax),
       color: colorCelestial,
     })
     celestials.push(body)
