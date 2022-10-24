@@ -5,7 +5,6 @@ export const KEY = 'gravity-yo-params'
 const paramDefaults = {
   G: 1,
   showVectors: true,
-  stepByStep: false,
   bounceFromEdges: false,
   celestialsCount: 1,
   massMin: 1000,

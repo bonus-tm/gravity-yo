@@ -52,10 +52,6 @@ onMounted(() => {
     </div>
 
     <div>
-      <input id="stepByStep" v-model="params.stepByStep" type="checkbox" disabled />
-      <label for="stepByStep">Step debug mode</label>
-    </div>
-    <div>
       <input id="showVectors" v-model="params.showVectors" type="checkbox" />
       <label for="showVectors">Show velocity and force vectors</label>
     </div>
@@ -65,6 +61,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>

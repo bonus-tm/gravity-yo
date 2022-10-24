@@ -56,12 +56,11 @@ const createCelestials = () => {
     })
     celestials.push(body)
   }
-  console.log(celestials)
 }
 
 const drawCelestials = () => {
   for (let body of celestials) {
-    body.draw(context)
+    body.draw()
   }
 }
 
@@ -70,17 +69,14 @@ const createWanderer = (x, y, dx, dy) => {
   time = performance.now()
   console.log('createWanderer', time)
   wanderer.init({
-    x: 200,
-    y: 130,
-    // direction: Math.PI + Math.atan2(dy, dx),
-    // speed: Math.sqrt(dx * dx + dy * dy) / 10,
-    direction: 0,
-    speed: 20,
+    x,
+    y,
+    direction: Math.PI + Math.atan2(dy, dx),
+    speed: Math.sqrt(dx * dx + dy * dy),
   })
 }
 
 const frame = ts => {
-  console.log('framed', {ts})
   clearCanvas()
   drawCelestials()
 
@@ -131,7 +127,6 @@ const pointEnd = e => {
   createWanderer(s.x, s.y, dx, dy)
 
   wanderer.draw()
-  console.log(wanderer)
 
   // run frames
   raf = window.requestAnimationFrame(frame)
@@ -153,49 +148,23 @@ const drawLine = (x, y) => {
 </script>
 
 <template>
-  <Logo />
-
-  <div>
+  <header>
+    <Logo />
     <div>
       Time
       {{ round(wanderer.time / 1000, 1) }}
-      s,
-      Distance
-      {{ round(wanderer.distanceTravelled) }}
-      px
+      s
     </div>
-
-    <div>
-      Speed
-      {{ round(wanderer.velocity.magnitude, 2) }}
-      px/s
-      [min {{ round(velocityMin) }},
-      max {{ round(velocityMax) }}]
-    </div>
-    <small>force {{ round(wanderer.force.magnitude, 2) }}</small>
-  </div>
-
-  <div v-if="wanderer" style="position:absolute;top: 10px;left: 10px;">
-    <div v-for="([x, y], i) in wanderer.trail" :key="`trail-${i}`">
-      {{ round(x) }}, {{ round(y) }}
-    </div>
-  </div>
+  </header>
 
   <canvas
+    ref="canvas"
+    height="500"
+    width="1000"
+    @mousemove="onMove"
     @mousedown.left="pointStart"
     @mouseup.left="pointEnd"
-    @mousemove="onMove"
-    ref="canvas"
-    width="1000"
-    height="500"
   />
 
   <Settings />
 </template>
-
-<style scoped>
-canvas {
-  border: 1px solid darkolivegreen;
-  background-color: var(--color-bg);
-}
-</style>

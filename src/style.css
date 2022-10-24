@@ -51,6 +51,16 @@ h1 {
   line-height: 1.1;
 }
 
+header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+canvas {
+  border: 1px solid darkolivegreen;
+  background-color: var(--color-bg);
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
