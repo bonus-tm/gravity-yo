@@ -3,17 +3,18 @@ import {computed, reactive} from 'vue'
 export const KEY = 'gravity-yo-params'
 
 const paramDefaults = {
-  G: 1,
+  G: 10, // gravitational constant
+  power: 1.75, // power of force decreasing with the distance
   showVectors: true,
   bounceFromEdges: false,
   celestialsCount: 1,
-  massMin: 1000,
-  massMax: 10_000,
+  massMin: 10_000,
+  massMax: 15_000,
   radiusMin: 0, // depends on canvas size — 1% of lesser dimension
   radiusMax: 0, // depends on canvas size — 5% of lesser dimension
   wandererMass: 1,
   wandererRadius: 3,
-  trailFadeoutMs: 2000,
+  trailFadeoutMs: 30000,
 }
 
 export const params = reactive(Object.assign({}, paramDefaults))

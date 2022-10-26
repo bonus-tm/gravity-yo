@@ -24,6 +24,10 @@ onMounted(() => {
       <label for="G">Gravitational constant</label>
       <input id="G" v-model="params.G" type="number" min="0" />
     </div>
+    <div>
+      <label for="power">Power of force decreasing with the distance</label>
+      <input id="power" v-model="params.power" type="number" min="0" />
+    </div>
 
     <div>
       <label for="celestialsCount">Celestials count</label>

@@ -117,7 +117,7 @@ export const wanderer = reactive({
         this.collision = true
       }
 
-      let magnitude = params.G * this.mass * body.mass / distance ** 2
+      let magnitude = params.G * this.mass * body.mass / distance ** params.power
       let direction = this.angleTo(body)
 
       this.force.add(createVector({direction, magnitude}))
