@@ -9,6 +9,7 @@ import {canvas, context, backgroundColor} from '@/store'
 import {clearCanvas, lineGradient} from '@/classes/draw.js'
 import Settings from '@/components/Settings.vue'
 import Logo from '@/components/Logo.vue'
+import {calcForces, drawForces} from '@/classes/forces.js'
 
 let raf
 
@@ -40,6 +41,10 @@ onMounted(() => {
   context.value = canvas.value.getContext('2d')
 
   createCelestials()
+
+  calcForces(celestials)
+  drawForces()
+
   drawCelestials()
 })
 
