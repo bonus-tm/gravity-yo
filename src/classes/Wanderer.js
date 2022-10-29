@@ -83,6 +83,8 @@ export const wanderer = reactive({
     this.x = 0
     this.y = 0
 
+    this.radius = params.wandererRadius
+
     this.force.reset()
     this.velocity.reset()
 
@@ -183,7 +185,7 @@ export const wanderer = reactive({
       let {x, y, time} = this.track[i]
       let trackTime = this.time - time
       let opacity = this.maxTrailOpacity * (fadeTime - trackTime) / fadeTime
-      line(x0, y0, x, y, 3, setOpacity(this.color, opacity))
+      line(x0, y0, x, y, this.radius, setOpacity(this.color, opacity))
 
       x0 = x
       y0 = y
