@@ -15,6 +15,8 @@ const paramDefaults = {
   wandererMass: 1,
   wandererRadius: 3,
   trailFadeoutMs: 30000,
+  showForces: true,
+  forcesType: 'arrows', // arrows|lines
 }
 
 export const params = reactive(Object.assign({}, paramDefaults))
