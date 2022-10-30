@@ -183,12 +183,16 @@ export const wanderer = reactive({
     let i = this.track.length - 1
     while (i > 0 && this.time - this.track[i].time < fadeTime) {
       let {x, y, time} = this.track[i]
-      let trackTime = this.time - time
-      let opacity = this.maxTrailOpacity * (fadeTime - trackTime) / fadeTime
-      line(x0, y0, x, y, this.radius, setOpacity(this.color, opacity))
 
-      x0 = x
-      y0 = y
+      // draw only when any coordinate difference is more than 1px
+      if (Math.abs(x - x0) >= 1 || Math.abs(y - y0) >= 1) {
+        let trackTime = this.time - time
+        let opacity = this.maxTrailOpacity * (fadeTime - trackTime) / fadeTime
+        line(x0, y0, x, y, this.radius, setOpacity(this.color, opacity))
+
+        x0 = x
+        y0 = y
+      }
       i--
     }
   },
