@@ -54,6 +54,10 @@ const createCelestials = () => {
   let padding = 0.1
   for (let i = 0; i < params.celestialsCount; i++) {
     let body = Object.assign(Object.create(Celestial), {
+      // x: 500,
+      // y: 250,
+      // mass: params.massMax,
+
       x: rand(width * padding, width * (1 - padding)),
       y: rand(height * padding, height * (1 - padding)),
       mass: rand(params.massMin, params.massMax),
@@ -77,7 +81,7 @@ const createWanderer = (x, y, dx, dy) => {
     x,
     y,
     direction: Math.PI + Math.atan2(dy, dx),
-    speed: Math.sqrt(dx * dx + dy * dy),
+    speed: Math.sqrt(dx * dx + dy * dy) / 100,
   })
 }
 
@@ -88,19 +92,11 @@ const frame = ts => {
   let dt = time > ts ? 0 : (ts - time) / 1000
   time = ts
 
-  wanderer.move(dt)
-  wanderer.drawTrail()
-
-  wanderer.draw()
   wanderer.updateForce(celestials)
-  wanderer.calcVelocity(dt)
+  wanderer.move(dt)
 
-  if (wanderer.velocity.magnitude > velocityMax.value) {
-    velocityMax.value = wanderer.velocity.magnitude
-  }
-  if (wanderer.velocity.magnitude < velocityMin.value) {
-    velocityMin.value = wanderer.velocity.magnitude
-  }
+  wanderer.drawTrail()
+  wanderer.draw()
 
   wanderer.pushToTrack()
 
@@ -130,6 +126,7 @@ const pointEnd = e => {
   let dx = e.offsetX - s.x
   let dy = e.offsetY - s.y
   createWanderer(s.x, s.y, dx, dy)
+  // createWanderer(500, 200, Math.sqrt(params.G * (params.massMax + 1) / (250-200)), 0)
 
   wanderer.draw()
 

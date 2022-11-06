@@ -3,6 +3,7 @@ import {params} from '@/params.js'
 import {setOpacity} from '@/util/colors.js'
 import {createVector} from '@/classes/Vector.js'
 import {circle, line} from '@/services/draw.js'
+import {calcForce} from '@/services/vector.js'
 
 /**
  * init
@@ -65,7 +66,6 @@ export const wanderer = reactive({
   radius: params.wandererRadius,
   mass: params.wandererMass,
 
-  force: createVector(),
   velocity: createVector(),
 
   color: 'rgb(255,0,0)',
@@ -85,7 +85,6 @@ export const wanderer = reactive({
 
     this.radius = params.wandererRadius
 
-    this.force.reset()
     this.velocity.reset()
 
     this.distanceTravelled = 0
@@ -101,38 +100,18 @@ export const wanderer = reactive({
     this.velocity.magnitude = speed
   },
 
-  distanceTo (body) {
-    return Math.sqrt(
-      ((this.x - body.x) ** 2) + ((this.y - body.y) ** 2)
-    )
-  },
-
-  angleTo (body) {
-    return Math.PI + Math.atan2(this.y - body.y, this.x - body.x)
-  },
-
   updateForce (bodies) {
-    this.force.reset()
-    for (let body of bodies) {
-      let distance = this.distanceTo(body)
-      if (distance < this.radius + body.radius) {
-        this.collision = true
-      }
+    let {dx, dy, collision, direction, magnitude} = calcForce({
+      x: this.x,
+      y: this.y,
+      mass: this.mass,
+      radius: this.radius,
+    }, bodies)
 
-      let magnitude = params.G * this.mass * body.mass / distance ** params.power
-      let direction = this.angleTo(body)
+    this.velocity.dx += dx
+    this.velocity.dy += dy
 
-      this.force.add(createVector({direction, magnitude}))
-    }
-  },
-
-  /**
-   *
-   * @param dt seconds
-   */
-  calcVelocity (dt) {
-    this.velocity.dx += this.force.dx * dt / this.mass
-    this.velocity.dy += this.force.dy * dt / this.mass
+    this.collision = collision
   },
 
   /**
@@ -140,8 +119,8 @@ export const wanderer = reactive({
    * @param dt seconds
    */
   move (dt) {
-    let dx = this.velocity.dx * dt + this.force.dx * dt * dt / (2 * this.mass)
-    let dy = this.velocity.dy * dt + this.force.dy * dt * dt / (2 * this.mass)
+    let dx = this.velocity.dx
+    let dy = this.velocity.dy
 
     this.x += dx
     this.y += dy
@@ -159,10 +138,6 @@ export const wanderer = reactive({
       vdy: this.velocity.dy,
       vDir: this.velocity.direction,
       vMag: this.velocity.magnitude,
-      fdx: this.force.dx,
-      fdy: this.force.dy,
-      fDir: this.force.direction,
-      fMag: this.force.magnitude,
     })
   },
 
@@ -206,14 +181,6 @@ export const wanderer = reactive({
         this.y + this.velocity.dy,
         1,
         'rgb(0,255,0)'
-      )
-      line(
-        this.x,
-        this.y,
-        this.x + this.force.dx,
-        this.y + this.force.dy,
-        1,
-        'rgb(0,200,255)'
       )
     }
 

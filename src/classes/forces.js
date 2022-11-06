@@ -3,6 +3,7 @@ import {createVector} from '@/classes/Vector.js'
 import {params} from '@/params.js'
 import {arrow, line} from '@/services/draw.js'
 import {setOpacity} from '@/util/colors.js'
+import {calcForce, distance, toPolar} from '@/services/vector'
 
 const step = 10
 let grid = []
@@ -15,7 +16,7 @@ const distanceTo = (x, y, body) => {
 }
 
 const angleTo = (x, y, body) => {
-  return Math.PI + Math.atan2(y - body.y, x - body.x)
+  return Math.atan2(body.y - y, body.x - x)
 }
 
 export const calcForces = celestials => {
@@ -26,22 +27,13 @@ export const calcForces = celestials => {
 
   for (let y = 0; y <= height; y += step) {
     for (let x = 0; x <= width; x += step) {
-      let force = createVector()
-      for (let body of celestials) {
-        let distance = distanceTo(x, y, body)
-        if (distance < body.radius + 10) continue
+      let force = calcForce({x, y, mass, radius: 1}, celestials, 0)
 
-        let direction = angleTo(x, y, body)
-        let magnitude = params.G * mass * body.mass / distance ** 2
-
-        if (magnitude > maxMagnitude) {
-          maxMagnitude = magnitude
-        }
-
-        force.add(createVector({direction, magnitude}))
+      if (force.magnitude > maxMagnitude) {
+        maxMagnitude = force.magnitude
       }
 
-      grid.push({x, y, force})
+      grid.push({x, y})
     }
   }
   console.log({maxMagnitude})
