@@ -1,7 +1,7 @@
 import {canvas} from '@/store.js'
 import {createVector} from '@/classes/Vector.js'
 import {params} from '@/params.js'
-import {arrow, line} from '@/classes/draw.js'
+import {arrow, line} from '@/services/draw.js'
 import {setOpacity} from '@/util/colors.js'
 
 const step = 10

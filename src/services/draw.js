@@ -1,4 +1,4 @@
-import {canvas, context, backgroundColor} from '@/store'
+import {canvas, context, backgroundColor} from '@/store.js'
 import {setOpacity} from '@/util/colors.js'
 
 export const clearCanvas = () => {

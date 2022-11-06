@@ -2,7 +2,7 @@ import {reactive} from 'vue'
 import {params} from '@/params.js'
 import {setOpacity} from '@/util/colors.js'
 import {createVector} from '@/classes/Vector.js'
-import {circle, line} from '@/classes/draw.js'
+import {circle, line} from '@/services/draw.js'
 
 /**
  * init

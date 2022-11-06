@@ -1,4 +1,4 @@
-import {circle} from '@/classes/draw.js'
+import {circle} from '@/services/draw.js'
 import {params} from '@/params.js'
 
 export const Celestial = {
