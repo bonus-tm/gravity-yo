@@ -101,17 +101,21 @@ export const wanderer = reactive({
   },
 
   updateForce (bodies) {
-    let {dx, dy, collision, direction, magnitude} = calcForce({
-      x: this.x,
-      y: this.y,
-      mass: this.mass,
-      radius: this.radius,
-    }, bodies)
+    try {
+      let {dx, dy, direction, magnitude} = calcForce({
+        x: this.x,
+        y: this.y,
+        mass: this.mass,
+        radius: this.radius,
+      }, bodies)
 
-    this.velocity.dx += dx
-    this.velocity.dy += dy
-
-    this.collision = collision
+      this.velocity.dx += dx
+      this.velocity.dy += dy
+    } catch (e) {
+      if (e.message === 'Collision detected') {
+        this.collision = true
+      }
+    }
   },
 
   /**

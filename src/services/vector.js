@@ -60,19 +60,16 @@ export const calcForce = (target, bodies, threshold = 0) => {
   dy = dY * magnitude / distance
   */
 
-  let force = {dx: 0, dy: 0, direction: 0, magnitude: 0, collision: false}
+  let force = {dx: 0, dy: 0, direction: 0, magnitude: 0}
 
   for (let body of bodies) {
     let dist2 = Math.pow(target.x - body.x, 2) + Math.pow(target.y - body.y, 2)
     let dist = Math.sqrt(dist2)
     if (dist < threshold + target.radius + body.radius) {
-      force.collision = true
-      continue
+      throw new Error('Collision detected')
     }
 
     let magnitude = params.G * (target.mass + body.mass) / dist2
-
-    // let dx = force.magnitude * Math.cos(force.direction) +
 
     force.dx += (body.x - target.x) * magnitude / dist
     force.dy += (body.y - target.y) * magnitude / dist

@@ -27,13 +27,17 @@ export const calcForces = celestials => {
 
   for (let y = 0; y <= height; y += step) {
     for (let x = 0; x <= width; x += step) {
-      let force = calcForce({x, y, mass, radius: 1}, celestials, 0)
+      try {
+        let force = calcForce({x, y, mass, radius: 1}, celestials, 10)
 
-      if (force.magnitude > maxMagnitude) {
-        maxMagnitude = force.magnitude
+        if (force.magnitude > maxMagnitude) {
+          maxMagnitude = force.magnitude
+        }
+
+        grid.push({x, y, force})
+      } catch (e) {
+        console.log({e})
       }
-
-      grid.push({x, y})
     }
   }
   console.log({maxMagnitude})
