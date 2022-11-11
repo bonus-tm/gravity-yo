@@ -6,7 +6,9 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
+  --color-app-bg: #242424;
+  background-color: var(--color-app-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,9 +16,11 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --color-bg: rgb(0,0,0);
-  --color-wanderer: rgb(255,0,0);
-  --color-celestial: rgb(255,255,255);
+  --color-bg: rgb(0, 0, 0);
+  --color-wanderer: rgb(255, 0, 0);
+  --color-celestial: rgb(255, 255, 255);
+
+  --header-height: 50px;
 }
 
 a {
@@ -40,7 +44,8 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  align-items: flex-start;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
   position: relative;
@@ -55,6 +60,10 @@ header {
   display: flex;
   align-items: center;
   gap: 2rem;
+  height: var(--header-height);
+}
+.spacer {
+  flex-grow: 1;
 }
 canvas {
   border: 1px solid darkolivegreen;
@@ -80,6 +89,15 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+input {
+  border-radius: 4px;
+  border: 1px solid transparent;
+  padding: 0.2em 0.6em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+}
+
 .card {
   padding: 2em;
 }
@@ -90,11 +108,12 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --color-app-bg: #ffffff;
 
-    --color-bg: rgb(255,255,255);
-    --color-celestial: rgb(0,0,0);
+    color: #213547;
+
+    --color-bg: rgb(255, 255, 255);
+    --color-celestial: rgb(0, 0, 0);
   }
   a:hover {
     color: #747bff;

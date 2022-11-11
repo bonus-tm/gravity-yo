@@ -10,6 +10,7 @@ import {clearCanvas, lineGradient} from '@/services/draw.js'
 import Settings from '@/components/Settings.vue'
 import Logo from '@/components/Logo.vue'
 import {calcForces, drawForces} from '@/classes/forces.js'
+import SvgCog from '@/components/SvgCog.vue'
 
 let raf
 
@@ -147,15 +148,31 @@ const drawLine = (x, y) => {
     setOpacity(colorWanderer, wanderer.minTrailOpacity)
   )
 }
+
+const showSettings = ref(false)
+const toggleSettings = () => {
+  showSettings.value = !showSettings.value
+}
 </script>
 
 <template>
   <header>
     <Logo />
+    <div class="spacer" />
     <div>
-      Time
-      {{ round(wanderer.time / 1000, 1) }}
-      s
+      <div>
+        Time
+        {{ round(wanderer.time / 1000, 1) }}
+        s
+      </div>
+      <div>
+        Distance
+        {{ round(wanderer.distanceTravelled, 0) }}
+        px
+      </div>
+    </div>
+    <div>
+      <SvgCog @click="toggleSettings" />
     </div>
   </header>
 
@@ -168,5 +185,5 @@ const drawLine = (x, y) => {
     @mouseup.left="pointEnd"
   />
 
-  <Settings />
+  <Settings v-show="showSettings" />
 </template>
