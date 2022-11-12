@@ -158,6 +158,10 @@ const toggleSettings = () => {
 <template>
   <header>
     <Logo />
+    <h2>
+      Level
+      <b>{{ params.celestialsCount }}</b>
+    </h2>
     <div class="spacer" />
     <div>
       <div>
